@@ -24,6 +24,7 @@ from __future__ import print_function
 from typing import Any, Dict, List, Optional, Text
 
 import tensorflow_model_analysis as tfma
+import copy
 from tfx.components import CsvExampleGen
 from tfx.components import Evaluator
 from tfx.components import ExampleValidator
@@ -50,6 +51,33 @@ from tfx.components import ImportExampleGen
 
 from ml_metadata.proto import metadata_store_pb2
 
+_project_id = 'cancer-cls'
+_gcp_region = 'us-central1'
+_ai_platform_training_args = {
+    'project': _project_id,
+    'region': _gcp_region,
+    # Starting from TFX 0.14, training on AI Platform uses custom containers:
+    # https://cloud.google.com/ml-engine/docs/containers-overview
+    # You can specify a custom container here. If not specified, TFX will use a
+    # a public container image matching the installed version of TFX.
+    # 'masterConfig': { 'imageUri': 'gcr.io/my-project/my-container' },
+    # Note that if you do specify a custom container, ensure the entrypoint
+    # calls into TFX's run_executor script (tfx/scripts/run_executor.py)
+}
+
+# A dict which contains the serving job parameters to be passed to Google
+# Cloud AI Platform. For the full set of parameters supported by Google Cloud AI
+# Platform, refer to
+# https://cloud.google.com/ml-engine/reference/rest/v1/projects.models
+_ai_platform_serving_args = {
+    'model_name': 'saved_model',
+    'project_id': _project_id,
+    # The region to use when serving the model. See available regions here:
+    # https://cloud.google.com/ml-engine/docs/regions
+    # Note that serving currently only supports a single region:
+    # https://cloud.google.com/ml-engine/reference/rest/v1/projects.models#Model
+    'regions': [_gcp_region],
+}
 
 def create_pipeline(
     pipeline_name: Text,
@@ -108,7 +136,7 @@ def create_pipeline(
       preprocessing_fn=preprocessing_fn)
   # TODO(step 6): Uncomment here to add Transform to the pipeline.
   components.append(transform)
-
+  ai_platform_training_args = copy.copy(ai_platform_training_args)
   # Uses user-provided Python function that implements a model using TF-Learn.
   trainer_args = {
       'run_fn': run_fn,
@@ -144,6 +172,7 @@ def create_pipeline(
   # TODO(step 6): Uncomment here to add ResolverNode to the pipeline.
   components.append(model_resolver)
 
+######### Original, DO NOT USE THIS
   # Uses TFMA to compute a evaluation statistics over features of a model and
   # perform quality validation of a candidate model (compared to a baseline).
 #   eval_config = tfma.EvalConfig(
@@ -161,45 +190,58 @@ def create_pipeline(
 #                           absolute={'value': -1e-10})))
 #           ])
 #       ])
-  eval_config = tfma.EvalConfig(
-    model_specs=[tfma.ModelSpec(label_key='label_xf', model_type='tf_lite')], #tf_lite
-    slicing_specs=[tfma.SlicingSpec()],
-    metrics_specs=[
-        tfma.MetricsSpec(metrics=[
-            tfma.MetricConfig(
-                class_name='SparseCategoricalAccuracy',
-                threshold=tfma.MetricThreshold(
-                    value_threshold=tfma.GenericValueThreshold(
-                        lower_bound={'value': 0.55}),
-                    # Change threshold will be ignored if there is no
-                    # baseline model resolved from MLMD (first run).
-                    change_threshold=tfma.GenericChangeThreshold(
-                        direction=tfma.MetricDirection.HIGHER_IS_BETTER,
-                        absolute={'value': -1e-3})))
-        ])
-    ])
+#########
+#   eval_config = tfma.EvalConfig(
+#     model_specs=[tfma.ModelSpec(label_key='label_xf', model_type='tf_lite')], #tf_lite
+#     slicing_specs=[tfma.SlicingSpec()],
+#     metrics_specs=[
+#         tfma.MetricsSpec(metrics=[
+#             tfma.MetricConfig(
+#                 class_name='SparseCategoricalAccuracy',
+#                 threshold=tfma.MetricThreshold(
+#                     value_threshold=tfma.GenericValueThreshold(
+#                         lower_bound={'value': 0.55}),
+#                     # Change threshold will be ignored if there is no
+#                     # baseline model resolved from MLMD (first run).
+#                     change_threshold=tfma.GenericChangeThreshold(
+#                         direction=tfma.MetricDirection.HIGHER_IS_BETTER,
+#                         absolute={'value': -1e-3})))
+#         ])
+#     ])
+########
+#   Original DO NOT USE THIS 
 #   evaluator = Evaluator(
 #       examples=example_gen.outputs['examples'],
 #       model=trainer.outputs['model'],
 #       baseline_model=model_resolver.outputs['model'],
 #       # Change threshold will be ignored if there is no baseline (first run).
 #       eval_config=eval_config)
-  evaluator = Evaluator(
-    examples=transform.outputs['transformed_examples'],
-    model=trainer.outputs['model'],
-    baseline_model=model_resolver.outputs['model'],
-    eval_config=eval_config)
+#########
+#   evaluator = Evaluator(
+#     examples=transform.outputs['transformed_examples'],
+#     model=trainer.outputs['model'],
+#     baseline_model=model_resolver.outputs['model'],
+#     eval_config=eval_config)
 
-  # TODO(step 6): Uncomment here to add Evaluator to the pipeline.
-  components.append(evaluator)
+#   # TODO(step 6): Uncomment here to add Evaluator to the pipeline.
+#   components.append(evaluator)
 
   # Checks whether the model passed the validation steps and pushes the model
   # to a file destination if check passed.
+#   pusher_args = {
+#       'model':
+#           trainer.outputs['model'],
+#       'model_blessing':
+#           evaluator.outputs['blessing'],
+#       'push_destination':
+#           pusher_pb2.PushDestination(
+#               filesystem=pusher_pb2.PushDestination.Filesystem(
+#                   base_directory=serving_model_dir)),
+#   }
+
   pusher_args = {
       'model':
           trainer.outputs['model'],
-      'model_blessing':
-          evaluator.outputs['blessing'],
       'push_destination':
           pusher_pb2.PushDestination(
               filesystem=pusher_pb2.PushDestination.Filesystem(
@@ -227,5 +269,5 @@ def create_pipeline(
       # is `False`.
       # enable_cache=True,
       metadata_connection_config=metadata_connection_config,
-      beam_pipeline_args=beam_pipeline_args,
+      beam_pipeline_args=beam_pipeline_args
   )
