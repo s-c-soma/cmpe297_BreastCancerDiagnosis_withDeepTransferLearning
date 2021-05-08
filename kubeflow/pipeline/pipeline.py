@@ -51,7 +51,7 @@ from tfx.components import ImportExampleGen
 
 from ml_metadata.proto import metadata_store_pb2
 
-_project_id = 'cancer-classify'
+_project_id = 'cancer-cls'
 _gcp_region = 'us-central1'
 _ai_platform_training_args = {
     'project': _project_id,
