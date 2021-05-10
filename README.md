@@ -1,6 +1,6 @@
-#  Diagnosis of Breast Cancer Using Combined CNN-RNN Architecture with Deep Transfer Learning
+#  Breast Cancer Diagnosis Using Deep Transfer Learning
 
-CMPE 297 Deep Learning Project : Diagnosis of Breast Cancer Using Combined CNN-RNN Architecture with Deep Transfer Learning
+CMPE 297 Deep Learning Project : Breast Cancer Diagnosis Using Deep Transfer Learning
 
 
 To run latest colab, please do the following
