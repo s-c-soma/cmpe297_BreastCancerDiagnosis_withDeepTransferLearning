@@ -12,3 +12,7 @@ https://towardsdatascience.com/setting-up-kaggle-in-google-colab-ebb281b61463
 
 3. After youve entered your token once run cells under 1.0 once. Then so long as you dont terminate your session, even if gets killed/crashes,
 next time you dont need to run cells under 1.0 again. You start from 2.0. However, if you terminate your session, you will need to repeat running 1.0.
+
+## Kubeflow Setup for Cancer Classification
+
+**kubeflow** folder contains all the necessary code needed to create, update and deploy a pipeline to kubeflow. Please use the template.ipynb file as a reference on how to execute these commands. This notebook must exist on a Jupyter notebook on GCP.
