@@ -37,13 +37,13 @@ sudo python3 main.py
 ```
 
 ### EC2
-This app code and tensor server are served on a single EC2 instance. To access this EC2, use the private key shared by the admin and run the following command:
+This app code is served on a single EC2 instance. To access this EC2, use the private key shared by the admin and run the following command:
 
 ```
 ssh -i ~/Desktop/258_key.pem  ubuntu@44.239.142.97
 ```
 
-I have created a screen for the app code and tensor flow server. Once you ssh, you can view them by running the following:
+I have created a screen for the app code. Once you ssh, you can view them by running the following:
 
 ```
 screen -ls
@@ -53,11 +53,10 @@ For example:
 ubuntu@ip-172-31-3-162:~/cancer_classifier_app/classifier/1$ screen -ls
 There are screens on:
 	39220.flask_server	(04/13/21 21:00:34)	(Detached)
-	38711.tensor_server	(04/13/21 20:36:43)	(Detached)
-2 Sockets in /run/screen/S-ubuntu.
+1 Sockets in /run/screen/S-ubuntu.
 ```
 
-You can see both the flask_server and tensor_server running.
+You can see the flask_server running in the background.
 
 To learn more about screening, check this link out: 
 
