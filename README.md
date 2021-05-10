@@ -18,7 +18,7 @@ next time you dont need to run cells under 1.0 again. You start from 2.0. Howeve
 **kubeflow** folder contains all the necessary code needed to create, update and deploy a pipeline to kubeflow. Please use the template.ipynb file as a reference on how to execute these commands. This notebook must exist on a Jupyter notebook on GCP.
 
 ## Flask Setup for Cancer Classification
-**kubeflow** folder contains all the flask server code. Below we describe the setup of our project. You can access this app here (if it is still being served by the team):
+**flask** folder contains all the flask server code. Below we describe the setup of our project. You can access this app here (if it is still being served by the team):
 
 http://cd.wasaequreshi.com (or http://44.239.142.97)
 
@@ -31,7 +31,7 @@ sudo python3 main.py
 ```
 
 ### EC2
-This app code and tensor server are served on a single EC2 instance. To access this EC2, use the private key shared by the admin and run the following command:
+This app code is served on a single EC2 instance. To access this EC2, use the private key shared by the admin and run the following command:
 
 ```
 ssh -i ~/Desktop/258_key.pem  ubuntu@44.239.142.97

@@ -1,10 +1,10 @@
 #### DO NOT PUSH ANY OF THE PRIVATE KEYS MENTIONED BELOW INTO THIS REPO
 # Cancer Detection
-This repository contains the tensor server (classifier) and the flask server (flask) code. Below we describe the setup of our project. You can access this app here (if it is still being served by the team):
+This repository contains the server code. Below we describe the setup of our project. You can access this app here (if it is still being served by the team):
 
 http://cd.wasaequreshi.com (or http://44.239.142.97)
 
-### Tensor Server (classifier directory)
+### Tensor Server (classifier directory) (Not needed anymore. But keeping for reference on how to run your own Tensor Serving)
 This directory contains the model which will be run using tensor_server. This is exported from the colab of our project:
 ```
 MODEL_DIR = "/content/drive/My Drive/258 Project/export_model"
@@ -28,7 +28,7 @@ Whenever changes are made to the model, the export needs to be checked back into
 tensorflow_model_server --rest_api_port=8502 --model_name=saved_model --model_base_path=/home/ubuntu/cancer_classifier_app/classifier
 ```
 ### Flask Server (flask directory)
-This contains the code for the UI and the backend which interacts with tensor server. The UI allows the user to input a image. The backend will then make a request with the input file to the tensor server for a prediction and display the output back on the screen respectively.
+This contains the code for the UI and the backend which interacts with AI Platform on GCP. The UI allows the user to input a image. The backend will then make a request with the input file to the model on AI Platform for a prediction and display the output back on the screen respectively.
 
 Run the following command to serve this app:
 
