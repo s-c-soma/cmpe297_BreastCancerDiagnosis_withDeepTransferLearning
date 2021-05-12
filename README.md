@@ -1,3 +1,9 @@
+# Demo Information
+
+You can view the demo of our project here: https://drive.google.com/file/d/1Pi0PpHzcglJdjgp4axyIvtRlRUiqe4is/view
+
+In addition we have checked the video into the repo: https://github.com/s-c-soma/cmpe297_BreastCancerDiagnosis_withDeepTransferLearning/blob/main/deliverables/final_project_demo.mp4
+
 #  Breast Cancer Diagnosis Using Deep Transfer Learning
 
 CMPE 297 Deep Learning Project : Breast Cancer Diagnosis Using Deep Transfer Learning
